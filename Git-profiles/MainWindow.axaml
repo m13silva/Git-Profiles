@@ -1,0 +1,83 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:Git_profiles.ViewModels"
+        xmlns:models="clr-namespace:Git_profiles.Models"
+        xmlns:views="clr-namespace:Git_profiles.Views"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Git_profiles.MainWindow"
+        x:CompileBindings="True"
+        x:DataType="vm:MainWindowViewModel"
+        Title="Git Profiles" 
+        Background="Transparent" 
+        TransparencyLevelHint="AcrylicBlur"
+        ExtendClientAreaToDecorationsHint="True"
+        WindowStartupLocation="CenterScreen"
+        MinWidth="500" MinHeight="400">
+    
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Window.Styles>
+        <Style Selector="Button.toolbar">
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Margin" Value="0 0 5 0"/>
+            <Setter Property="CornerRadius" Value="15"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="Button.toolbar:pointerover">
+            <Setter Property="Background" Value="#3DFFFFFF"/>
+            <Setter Property="BorderBrush" Value="#50FFFFFF"/>
+        </Style>
+    </Window.Styles>
+    
+    <Border BoxShadow="0 0 10 0 #66000000" Margin="5" CornerRadius="10" Background="#212121">
+        <DockPanel Margin="0 30 0 0">
+            <!-- Barra de herramientas superior -->
+            <Grid DockPanel.Dock="Top" Margin="10 5 10 10" Height="40">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="Perfil actual:" VerticalAlignment="Center" Margin="10 0 10 0" Foreground="White"/>
+                    <TextBlock Text="{CompiledBinding CurrentProfile.Name}" VerticalAlignment="Center" 
+                              FontWeight="SemiBold" Foreground="#8EE3FF"/>
+                </StackPanel>
+                
+                <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="+" Command="{CompiledBinding AddProfileCommand}" Classes="toolbar" ToolTip.Tip="Agregar nuevo perfil"/>
+                    <Button Content="-" Command="{CompiledBinding RemoveProfileCommand}" Classes="toolbar" ToolTip.Tip="Eliminar perfil seleccionado"/>
+                    <Button Content="&#x270E;" Command="{CompiledBinding EditProfileCommand}" Classes="toolbar" ToolTip.Tip="Editar perfil seleccionado"/>
+                    <Button Content="&#x2713;" Command="{CompiledBinding SetActiveProfileCommand}" Classes="toolbar" ToolTip.Tip="Establecer como perfil activo"/>
+                </StackPanel>
+            </Grid>
+            
+            <!-- Separador -->
+            <Separator DockPanel.Dock="Top" Background="#333333" Height="1" Margin="5,0"/>
+            
+            <!-- Lista de perfiles -->
+            <ScrollViewer Padding="10" Margin="0 10 0 0">
+                <ItemsControl x:DataType="vm:MainWindowViewModel" 
+                            ItemsSource="{Binding Profiles}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <views:ProfileCard/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </DockPanel>
+    </Border>
+</Window>

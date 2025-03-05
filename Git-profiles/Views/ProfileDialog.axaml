@@ -1,0 +1,41 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:models="clr-namespace:Git_profiles.Models"
+        xmlns:views="clr-namespace:Git_profiles.Views"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="400"
+        x:Class="Git_profiles.Views.ProfileDialog"
+        x:DataType="views:ProfileDialogViewModel"
+        x:CompileBindings="True"
+        Title="{Binding Title}"
+        Width="400" Height="400"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+
+    <DockPanel Margin="20">
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+            <Button Content="Aceptar" Click="OnOkClick" />
+            <Button Content="Cancelar" Click="OnCancelClick" />
+        </StackPanel>
+
+        <StackPanel Spacing="10">
+            <TextBlock Text="Nombre:" />
+            <TextBox Text="{Binding Profile.Name}" />
+            
+            <TextBlock Text="Email:" Margin="0 10 0 0"/>
+            <TextBox Text="{Binding Profile.Email}" />
+
+            <CheckBox Content="Usar GPG" IsChecked="{Binding UseGpg}" Margin="0 10 0 0"/>
+            
+            <StackPanel IsVisible="{Binding UseGpg}">
+                <TextBlock Text="Clave GPG:" Margin="0 10 0 0"/>
+                <ComboBox ItemsSource="{Binding GpgKeys}"
+                          SelectedItem="{Binding SelectedGpgKey}"
+                          IsEnabled="{Binding UseGpg}"
+                          Width="300"
+                          HorizontalAlignment="Left"/>
+            </StackPanel>
+        </StackPanel>
+    </DockPanel>
+</Window>

@@ -1,0 +1,59 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Git_profiles.App"
+             RequestedThemeVariant="Dark">
+
+    <Application.Styles>
+        <FluentTheme />
+        
+        <!-- Estilos globales -->
+        <Style Selector="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        
+        <Style Selector="TextBox">
+            <Setter Property="Background" Value="#2A2A2A"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="CornerRadius" Value="4"/>
+        </Style>
+        
+        <Style Selector="Button">
+            <Setter Property="Background" Value="#2B5797"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.2" />
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" />
+                </Transitions>
+            </Setter>
+        </Style>
+        
+        <Style Selector="Button:pointerover">
+            <Setter Property="Background" Value="#3969B2"/>
+            <Setter Property="RenderTransform" Value="scale(1.03)" />
+        </Style>
+        
+        <Style Selector="Button:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.98)" />
+        </Style>
+        
+        <Style Selector="CheckBox">
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <!-- Estilos específicos para tarjetas de perfil -->
+        <Style Selector="Border.profile-card">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <ThicknessTransition Property="Margin" Duration="0:0:0.2" />
+                </Transitions>
+            </Setter>
+        </Style>
+        
+        <Style Selector="Border.profile-card:pointerover">
+            <Setter Property="BoxShadow" Value="0 4 8 0 #66000000"/>
+            <Setter Property="Margin" Value="3 3 7 7"/>
+        </Style>
+    </Application.Styles>
+</Application>
