@@ -9,8 +9,8 @@
     
     <DockPanel Margin="20">
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
-            <Button Content="Aceptar" Click="OnOkClick" />
-            <Button Content="Cancelar" Click="OnCancelClick" />
+            <Button Content="Accept" Click="OnOkClick" />
+            <Button Content="Cancel" Click="OnCancelClick" />
         </StackPanel>
 
         <TextBlock Text="{CompiledBinding Message}" TextWrapping="Wrap" VerticalAlignment="Center"/>

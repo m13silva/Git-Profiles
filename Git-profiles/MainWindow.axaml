@@ -59,7 +59,7 @@
                     </Grid.ColumnDefinitions>
                     
                     <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock Text="Perfil actual:" VerticalAlignment="Center" Margin="10 0 10 0" Foreground="White"/>
+                        <TextBlock Text="Current profile:" VerticalAlignment="Center" Margin="10 0 10 0" Foreground="White"/>
                         <TextBlock Text="{CompiledBinding CurrentProfile.Name}" VerticalAlignment="Center" 
                                   FontWeight="SemiBold" Foreground="#8EE3FF"/>
                     </StackPanel>
