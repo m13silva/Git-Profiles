@@ -75,12 +75,13 @@
                 <Separator DockPanel.Dock="Top" Background="#333333" Height="1" Margin="5,0"/>
                 
                 <!-- Lista de perfiles -->
-                <ScrollViewer Padding="10" Margin="0 10 0 0">
+                <ScrollViewer>
                     <ItemsControl x:DataType="vm:MainWindowViewModel" 
-                                ItemsSource="{Binding Profiles}">
+                                ItemsSource="{Binding Profiles}"
+                                Margin="10">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <views:ProfileCard/>
+                                <views:ProfileCard Margin="0 0 0 5"/>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
