@@ -34,16 +34,47 @@ namespace Git_profiles.Models
 
                 if (process.ExitCode == 0)
                 {
-                    var keyRegex = new Regex(@"sec\s+(?:[\w-]+\/)?(\w+)\s+(\d{4}-\d{2}-\d{2})\s+\[(?:SC|S|E)\]\s*\n(?:.*\n)*?\s*uid\s+\[ultimate\]\s+([^\n]+)", RegexOptions.Multiline);
-                    var matches = keyRegex.Matches(output);
+                    var lines = output.Split('\n');
+                    string currentKeyId = "";
+                    DateTime currentCreationDate = DateTime.MinValue;
+                    string currentUserInfo = "";
 
-                    foreach (Match match in matches)
+                    foreach (var line in lines)
+                    {
+                        var fields = line.Split(':');
+                        if (fields.Length < 10) continue;
+
+                        if (fields[0] == "sec")
+                        {
+                            // Si ya teníamos una llave anterior, la agregamos a la lista
+                            if (!string.IsNullOrEmpty(currentKeyId) && !string.IsNullOrEmpty(currentUserInfo))
+                            {
+                                keys.Add(new GpgKey
+                                {
+                                    KeyId = currentKeyId,
+                                    CreationDate = currentCreationDate,
+                                    UserInfo = currentUserInfo
+                                });
+                            }
+
+                            currentKeyId = fields[4];
+                            currentCreationDate = DateTimeOffset.FromUnixTimeSeconds(long.Parse(fields[5])).DateTime;
+                            currentUserInfo = "";
+                        }
+                        else if (fields[0] == "uid" && string.IsNullOrEmpty(currentUserInfo))
+                        {
+                            currentUserInfo = fields[9];
+                        }
+                    }
+
+                    // Agregar la última llave
+                    if (!string.IsNullOrEmpty(currentKeyId) && !string.IsNullOrEmpty(currentUserInfo))
                     {
                         keys.Add(new GpgKey
                         {
-                            KeyId = match.Groups[1].Value,
-                            CreationDate = DateTime.Parse(match.Groups[2].Value),
-                            UserInfo = match.Groups[3].Value
+                            KeyId = currentKeyId,
+                            CreationDate = currentCreationDate,
+                            UserInfo = currentUserInfo
                         });
                     }
                 }

@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia.Controls;
 using Git_profiles.Models;
@@ -24,8 +27,8 @@ namespace Git_profiles.ViewModels
 
             // Initialize commands
             AddProfileCommand = new AvaloniaCommand(AddProfile);
-            RemoveProfileCommand = new AvaloniaCommand(RemoveProfile, CanRemoveProfile);
-            EditProfileCommand = new AvaloniaCommand(EditProfile, CanEditProfile);
+            RemoveProfileCommand = new AvaloniaCommand(RemoveProfile);
+            EditProfileCommand = new AvaloniaCommand(EditProfile);
             SetActiveProfileCommand = new AvaloniaCommand(SetActiveProfile, CanSetActiveProfile);
         }
 
@@ -139,17 +142,50 @@ namespace Git_profiles.ViewModels
             }
         }
 
-        private void RemoveProfile()
+        private async void RemoveProfile()
         {
-            var selected = GetSelectedProfile();
-            if (selected != null)
+            var selected = GetSelectedProfiles();
+            if (selected != null && selected.Count > 0)
             {
-                _databaseService.DeleteProfile(selected.Id);
-                Profiles.Remove(selected);
-
-                if (selected == CurrentProfile && Profiles.Count > 0)
+                var dialog = new ConfirmDialog
                 {
-                    CurrentProfile = Profiles[0];
+                    Title = "Confirmar eliminación",
+                    Message = selected.Count == 1
+                        ? "¿Estás seguro de que deseas eliminar el perfil seleccionado?"
+                        : $"¿Estás seguro de que deseas eliminar los {selected.Count} perfiles seleccionados?"
+                };
+
+                if (_parentWindow != null)
+                {
+                    var result = await dialog.ShowDialog<bool>(_parentWindow);
+                    if (result)
+                    {
+                        await Task.Run(() =>
+                        {
+                            foreach (var profile in selected)
+                            {
+                                _databaseService.DeleteProfile(profile.Id);
+                            }
+                        });
+
+                        foreach (var profile in selected.ToList())
+                        {
+                            Profiles.Remove(profile);
+                        }
+
+                        if (Profiles.Count > 0)
+                        {
+                            CurrentProfile = Profiles[0];
+                        }
+                    }
+                    else
+                    {
+                        //Console.WriteLine("Dialog result: " + result);
+                        foreach (var profile in selected)
+                        {
+                            profile.IsSelected = false;
+                        }
+                    }
                 }
             }
         }
@@ -168,6 +204,7 @@ namespace Git_profiles.ViewModels
                 dialog.SetProfile(selected);
 
                 var result = await dialog.ShowDialog<bool>(_parentWindow);
+                Console.WriteLine($"Dialog result: {result}");
                 if (result)
                 {
                     var editedProfile = dialog.GetProfile();
@@ -186,10 +223,13 @@ namespace Git_profiles.ViewModels
                         if (selected.ExecuteImmediately)
                         {
                             ApplyGitConfig(selected);
+
                         }
                     }
                 }
+                selected.IsSelected = false;
             }
+
         }
 
         private bool CanEditProfile()
@@ -214,14 +254,21 @@ namespace Git_profiles.ViewModels
 
         private GitProfileModel? GetSelectedProfile()
         {
-            foreach (var profile in Profiles)
+            return Profiles.Where(p => p.IsSelected).ToList().FirstOrDefault();
+            /*foreach (var profile in Profiles)
             {
                 if (profile.IsSelected)
                 {
+                    Console.WriteLine($"Selected profile: {profile.Name}");
                     return profile;
                 }
             }
-            return null;
+            Console.WriteLine("No profile selected.");
+            return null;*/
+        }
+        private List<GitProfileModel>? GetSelectedProfiles()
+        {
+            return Profiles.Where(p => p.IsSelected).ToList();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
