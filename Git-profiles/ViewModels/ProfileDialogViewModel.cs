@@ -58,6 +58,21 @@ namespace Git_profiles.Views
                 if (value != null && _profile.GpgKeyId != value.KeyId)
                 {
                     _profile.GpgKeyId = value.KeyId;
+
+                    // Extraer nombre y correo del UserInfo, ignorando la descripción que puede venir después
+                    var userInfo = value.UserInfo;
+                    var emailMatch = System.Text.RegularExpressions.Regex.Match(userInfo, @".*?<(.+?)>");
+                    if (emailMatch.Success)
+                    {
+                        var email = emailMatch.Groups[1].Value.Trim();
+                        // Obtener el nombre eliminando el email y cualquier descripción después
+                        var name = userInfo.Split(' ', 2)[0].Trim();
+
+                        _profile.Name = name;
+                        _profile.Email = email;
+                        OnPropertyChanged(nameof(Profile));
+                    }
+
                     OnPropertyChanged();
                 }
             }
