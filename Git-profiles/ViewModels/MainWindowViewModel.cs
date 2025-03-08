@@ -32,10 +32,10 @@ namespace Git_profiles.ViewModels
             SetActiveProfileCommand = new AvaloniaCommand(SetActiveProfile, CanSetActiveProfile);
         }
 
-        private void LoadProfiles()
+        private async void LoadProfiles()
         {
             Profiles.Clear();
-            var profiles = _databaseService.GetAllProfiles();
+            var profiles = await Task.Run(() => _databaseService.GetAllProfiles());
             foreach (var profile in profiles)
             {
                 Profiles.Add(profile);
@@ -63,26 +63,26 @@ namespace Git_profiles.ViewModels
             {
                 if (_currentProfile != value)
                 {
-                    if (_currentProfile != null)
-                    {
-                        _currentProfile.IsActive = false;
-                        _databaseService.SaveProfile(_currentProfile);
-                    }
-
+                    var oldProfile = _currentProfile;
                     _currentProfile = value;
-
-                    if (_currentProfile != null)
-                    {
-                        _currentProfile.IsActive = true;
-                        _databaseService.SaveProfile(_currentProfile);
-
-                        if (_currentProfile.ExecuteImmediately)
-                        {
-                            ApplyGitConfig(_currentProfile);
-                        }
-                    }
-
                     OnPropertyChanged();
+
+                    // Ejecutar operaciones de base de datos y Git en segundo plano
+                    Task.Run(async () =>
+                    {
+                        if (oldProfile != null)
+                        {
+                            oldProfile.IsActive = false;
+                            await Task.Run(() => _databaseService.SaveProfile(oldProfile));
+                        }
+
+                        if (_currentProfile != null)
+                        {
+                            _currentProfile.IsActive = true;
+                            await Task.Run(() => _databaseService.SaveProfile(_currentProfile));
+                            await Task.Run(() => ApplyGitConfig(_currentProfile));
+                        }
+                    });
                 }
             }
         }
@@ -136,7 +136,7 @@ namespace Git_profiles.ViewModels
                 if (result)
                 {
                     var newProfile = dialog.GetProfile();
-                    _databaseService.SaveProfile(newProfile);
+                    await Task.Run(() => _databaseService.SaveProfile(newProfile));
                     Profiles.Add(newProfile);
                 }
             }
@@ -213,23 +213,18 @@ namespace Git_profiles.ViewModels
                     selected.GpgKeyId = editedProfile.GpgKeyId;
                     selected.UseGpg = editedProfile.UseGpg;
                     selected.Color = editedProfile.Color;
-                    selected.ExecuteImmediately = editedProfile.ExecuteImmediately;
 
-                    _databaseService.SaveProfile(selected);
+                    // Guardar en base de datos de manera asíncrona
+                    await Task.Run(() => _databaseService.SaveProfile(selected));
 
                     if (selected == CurrentProfile)
                     {
                         OnPropertyChanged(nameof(CurrentProfile));
-                        if (selected.ExecuteImmediately)
-                        {
-                            ApplyGitConfig(selected);
-
-                        }
+                        await Task.Run(() => ApplyGitConfig(selected));
                     }
                 }
                 selected.IsSelected = false;
             }
-
         }
 
         private bool CanEditProfile()

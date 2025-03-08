@@ -35,8 +35,7 @@ namespace Git_profiles.Models
                     GpgKeyId TEXT,
                     Color TEXT,
                     IsActive INTEGER DEFAULT 0,
-                    UseGpg INTEGER DEFAULT 0,
-                    ExecuteImmediately INTEGER DEFAULT 1
+                    UseGpg INTEGER DEFAULT 0
                 )";
             command.ExecuteNonQuery();
         }
@@ -67,8 +66,7 @@ namespace Git_profiles.Models
                     GpgKeyId = reader.IsDBNull(3) ? string.Empty : reader.GetString(3),
                     Color = reader.IsDBNull(4) ? string.Empty : reader.GetString(4),
                     IsActive = reader.GetInt32(5) == 1,
-                    UseGpg = reader.GetInt32(6) == 1,
-                    ExecuteImmediately = reader.GetInt32(7) == 1
+                    UseGpg = reader.GetInt32(6) == 1
                 });
             }
 
@@ -90,16 +88,15 @@ namespace Git_profiles.Models
             if (profile.Id == 0)
             {
                 command.CommandText = @"
-                    INSERT INTO GitProfiles (Name, Email, GpgKeyId, Color, IsActive, UseGpg, ExecuteImmediately)
-                    VALUES (@name, @email, @gpgKeyId, @color, @isActive, @useGpg, @executeImmediately)";
+                    INSERT INTO GitProfiles (Name, Email, GpgKeyId, Color, IsActive, UseGpg)
+                    VALUES (@name, @email, @gpgKeyId, @color, @isActive, @useGpg)";
             }
             else
             {
                 command.CommandText = @"
                     UPDATE GitProfiles 
                     SET Name = @name, Email = @email, GpgKeyId = @gpgKeyId, 
-                        Color = @color, IsActive = @isActive, UseGpg = @useGpg,
-                        ExecuteImmediately = @executeImmediately
+                        Color = @color, IsActive = @isActive, UseGpg = @useGpg
                     WHERE Id = @id";
                 command.Parameters.AddWithValue("@id", profile.Id);
             }
@@ -110,7 +107,6 @@ namespace Git_profiles.Models
             command.Parameters.AddWithValue("@color", (object)profile.Color ?? DBNull.Value);
             command.Parameters.AddWithValue("@isActive", profile.IsActive ? 1 : 0);
             command.Parameters.AddWithValue("@useGpg", profile.UseGpg ? 1 : 0);
-            command.Parameters.AddWithValue("@executeImmediately", profile.ExecuteImmediately ? 1 : 0);
 
             command.ExecuteNonQuery();
         }

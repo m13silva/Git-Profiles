@@ -15,7 +15,6 @@ namespace Git_profiles.Models
         private bool _useGpg;
         private string _gpgKeyId = string.Empty;
         private string _color = string.Empty;
-        private bool _executeImmediately = true;
 
         private static readonly Color[] PredefinedColors = new[]
         {
@@ -125,19 +124,6 @@ namespace Git_profiles.Models
                 if (_color != value)
                 {
                     _color = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        public bool ExecuteImmediately
-        {
-            get => _executeImmediately;
-            set
-            {
-                if (_executeImmediately != value)
-                {
-                    _executeImmediately = value;
                     OnPropertyChanged();
                 }
             }

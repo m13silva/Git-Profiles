@@ -26,7 +26,6 @@ namespace Git_profiles.Views
                 UseGpg = profile.UseGpg,
                 GpgKeyId = profile.GpgKeyId,
                 Color = profile.Color,
-                ExecuteImmediately = profile.ExecuteImmediately,
                 IsActive = profile.IsActive
             };
             _viewModel.UseGpg = profile.UseGpg;

@@ -36,11 +36,6 @@
                           Width="300"
                           HorizontalAlignment="Left"/>
             </StackPanel>
-
-            <CheckBox Content="Aplicar cambios inmediatamente" 
-                      IsChecked="{Binding Profile.ExecuteImmediately}" 
-                      Margin="0 20 0 0"
-                      ToolTip.Tip="Si está desactivado, los cambios no se aplicarán hasta que ejecutes manualmente el comando git config"/>
         </StackPanel>
     </DockPanel>
 </Window>
