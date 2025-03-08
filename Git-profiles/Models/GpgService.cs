@@ -19,7 +19,7 @@ namespace Git_profiles.Models
                     StartInfo = new ProcessStartInfo
                     {
                         FileName = "cmd.exe",
-                        Arguments = "/c gpg --list-secret-keys --keyid-format=long",
+                        Arguments = "/c gpg --list-secret-keys --with-colons",
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
                         RedirectStandardError = true,

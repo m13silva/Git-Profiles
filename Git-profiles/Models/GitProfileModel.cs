@@ -7,19 +7,35 @@ namespace Git_profiles.Models
 {
     public class GitProfileModel : INotifyPropertyChanged
     {
+        private int _id;
         private string _name = string.Empty;
         private string _email = string.Empty;
         private bool _isSelected;
         private bool _isActive;
         private bool _useGpg;
         private string _gpgKeyId = string.Empty;
+        private string _color = string.Empty;
+        private bool _executeImmediately = true;
 
         private static readonly Color[] PredefinedColors = new[]
         {
-            Color.Parse("#D04444"), Color.Parse("#D35F5F"), Color.Parse("#E67E22"), Color.Parse("#F39C12"),
-            Color.Parse("#27AE60"), Color.Parse("#2ECC71"), Color.Parse("#1ABC9C"), Color.Parse("#16A085"),
-            Color.Parse("#3498DB"), Color.Parse("#2980B9"), Color.Parse("#9B59B6"), Color.Parse("#8E44AD")
+            Avalonia.Media.Color.Parse("#D04444"), Avalonia.Media.Color.Parse("#D35F5F"), Avalonia.Media.Color.Parse("#E67E22"), Avalonia.Media.Color.Parse("#F39C12"),
+            Avalonia.Media.Color.Parse("#27AE60"), Avalonia.Media.Color.Parse("#2ECC71"), Avalonia.Media.Color.Parse("#1ABC9C"), Avalonia.Media.Color.Parse("#16A085"),
+            Avalonia.Media.Color.Parse("#3498DB"), Avalonia.Media.Color.Parse("#2980B9"), Avalonia.Media.Color.Parse("#9B59B6"), Avalonia.Media.Color.Parse("#8E44AD")
         };
+
+        public int Id
+        {
+            get => _id;
+            set
+            {
+                if (_id != value)
+                {
+                    _id = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         public string Name
         {
@@ -96,6 +112,32 @@ namespace Git_profiles.Models
                 if (_gpgKeyId != value)
                 {
                     _gpgKeyId = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public string Color
+        {
+            get => _color;
+            set
+            {
+                if (_color != value)
+                {
+                    _color = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public bool ExecuteImmediately
+        {
+            get => _executeImmediately;
+            set
+            {
+                if (_executeImmediately != value)
+                {
+                    _executeImmediately = value;
                     OnPropertyChanged();
                 }
             }

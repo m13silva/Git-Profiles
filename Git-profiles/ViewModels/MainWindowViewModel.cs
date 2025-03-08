@@ -1,6 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Avalonia.Controls;
@@ -13,27 +14,38 @@ namespace Git_profiles.ViewModels
     {
         private GitProfileModel? _currentProfile;
         private Window? _parentWindow;
+        private readonly DatabaseService _databaseService;
 
         public MainWindowViewModel()
         {
-            // Inicializar con datos de ejemplo
-            Profiles = new ObservableCollection<GitProfileModel>
-            {
-                new GitProfileModel { Name = "John Doe", Email = "john@example.com" },
-                new GitProfileModel { Name = "Mary Smith", Email = "mary@example.com" },
-                new GitProfileModel { Name = "David Jones", Email = "david@example.com" },
-                new GitProfileModel { Name = "Emma Wilson", Email = "emma@example.com" },
-                new GitProfileModel { Name = "Robert Brown", Email = "robert@example.com" }
-            };
+            _databaseService = new DatabaseService();
+            Profiles = new ObservableCollection<GitProfileModel>();
+            LoadProfiles();
 
-            // Establecer perfil actual
-            CurrentProfile = Profiles[0];
-
-            // Inicializar comandos
+            // Initialize commands
             AddProfileCommand = new AvaloniaCommand(AddProfile);
             RemoveProfileCommand = new AvaloniaCommand(RemoveProfile, CanRemoveProfile);
             EditProfileCommand = new AvaloniaCommand(EditProfile, CanEditProfile);
             SetActiveProfileCommand = new AvaloniaCommand(SetActiveProfile, CanSetActiveProfile);
+        }
+
+        private void LoadProfiles()
+        {
+            Profiles.Clear();
+            var profiles = _databaseService.GetAllProfiles();
+            foreach (var profile in profiles)
+            {
+                Profiles.Add(profile);
+                if (profile.IsActive)
+                {
+                    CurrentProfile = profile;
+                }
+            }
+
+            if (CurrentProfile == null && Profiles.Count > 0)
+            {
+                CurrentProfile = Profiles[0];
+            }
         }
 
         public void SetParentWindow(Window window)
@@ -49,15 +61,59 @@ namespace Git_profiles.ViewModels
                 if (_currentProfile != value)
                 {
                     if (_currentProfile != null)
+                    {
                         _currentProfile.IsActive = false;
+                        _databaseService.SaveProfile(_currentProfile);
+                    }
 
                     _currentProfile = value;
 
                     if (_currentProfile != null)
+                    {
                         _currentProfile.IsActive = true;
+                        _databaseService.SaveProfile(_currentProfile);
+
+                        if (_currentProfile.ExecuteImmediately)
+                        {
+                            ApplyGitConfig(_currentProfile);
+                        }
+                    }
 
                     OnPropertyChanged();
                 }
+            }
+        }
+
+        private void ApplyGitConfig(GitProfileModel profile)
+        {
+            var processStartInfo = new ProcessStartInfo
+            {
+                FileName = "git",
+                CreateNoWindow = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false
+            };
+
+            // Configurar nombre y email
+            processStartInfo.Arguments = $"config --global user.name \"{profile.Name}\"";
+            Process.Start(processStartInfo)?.WaitForExit();
+
+            processStartInfo.Arguments = $"config --global user.email \"{profile.Email}\"";
+            Process.Start(processStartInfo)?.WaitForExit();
+
+            if (profile.UseGpg && !string.IsNullOrEmpty(profile.GpgKeyId))
+            {
+                processStartInfo.Arguments = "config --global commit.gpgsign true";
+                Process.Start(processStartInfo)?.WaitForExit();
+
+                processStartInfo.Arguments = $"config --global user.signingkey {profile.GpgKeyId}";
+                Process.Start(processStartInfo)?.WaitForExit();
+            }
+            else
+            {
+                processStartInfo.Arguments = "config --global commit.gpgsign false";
+                Process.Start(processStartInfo)?.WaitForExit();
             }
         }
 
@@ -77,6 +133,7 @@ namespace Git_profiles.ViewModels
                 if (result)
                 {
                     var newProfile = dialog.GetProfile();
+                    _databaseService.SaveProfile(newProfile);
                     Profiles.Add(newProfile);
                 }
             }
@@ -87,6 +144,7 @@ namespace Git_profiles.ViewModels
             var selected = GetSelectedProfile();
             if (selected != null)
             {
+                _databaseService.DeleteProfile(selected.Id);
                 Profiles.Remove(selected);
 
                 if (selected == CurrentProfile && Profiles.Count > 0)
@@ -115,10 +173,20 @@ namespace Git_profiles.ViewModels
                     var editedProfile = dialog.GetProfile();
                     selected.Name = editedProfile.Name;
                     selected.Email = editedProfile.Email;
+                    selected.GpgKeyId = editedProfile.GpgKeyId;
+                    selected.UseGpg = editedProfile.UseGpg;
+                    selected.Color = editedProfile.Color;
+                    selected.ExecuteImmediately = editedProfile.ExecuteImmediately;
+
+                    _databaseService.SaveProfile(selected);
 
                     if (selected == CurrentProfile)
                     {
                         OnPropertyChanged(nameof(CurrentProfile));
+                        if (selected.ExecuteImmediately)
+                        {
+                            ApplyGitConfig(selected);
+                        }
                     }
                 }
             }

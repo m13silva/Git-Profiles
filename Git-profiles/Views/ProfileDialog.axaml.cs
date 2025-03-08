@@ -20,9 +20,16 @@ namespace Git_profiles.Views
         {
             _viewModel.Profile = new GitProfileModel
             {
+                Id = profile.Id,
                 Name = profile.Name,
-                Email = profile.Email
+                Email = profile.Email,
+                UseGpg = profile.UseGpg,
+                GpgKeyId = profile.GpgKeyId,
+                Color = profile.Color,
+                ExecuteImmediately = profile.ExecuteImmediately,
+                IsActive = profile.IsActive
             };
+            _viewModel.UseGpg = profile.UseGpg;
         }
 
         public GitProfileModel GetProfile() => _viewModel.Profile;

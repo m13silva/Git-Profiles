@@ -9,7 +9,7 @@
         x:DataType="views:ProfileDialogViewModel"
         x:CompileBindings="True"
         Title="{Binding Title}"
-        Width="400" Height="400"
+        Width="400" Height="450"
         WindowStartupLocation="CenterOwner"
         CanResize="False">
 
@@ -36,6 +36,11 @@
                           Width="300"
                           HorizontalAlignment="Left"/>
             </StackPanel>
+
+            <CheckBox Content="Aplicar cambios inmediatamente" 
+                      IsChecked="{Binding Profile.ExecuteImmediately}" 
+                      Margin="0 20 0 0"
+                      ToolTip.Tip="Si está desactivado, los cambios no se aplicarán hasta que ejecutes manualmente el comando git config"/>
         </StackPanel>
     </DockPanel>
 </Window>
