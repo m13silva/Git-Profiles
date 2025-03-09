@@ -17,6 +17,23 @@
         SystemDecorations="Full"
         TransparencyLevelHint="Mica">
 
+    <Window.Styles>
+        <Style Selector="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="#50FFFFFF"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Padding" Value="10 5"/>
+        </Style>
+        <Style Selector="Button:pointerover">
+            <Setter Property="Background" Value="#3DFFFFFF"/>
+            <Setter Property="BorderBrush" Value="#50FFFFFF"/>
+        </Style>
+        <Style Selector="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+    </Window.Styles>
+
     <Border BoxShadow="0 0 0 0 #66000000" Background="#212121">
         <Grid>
             <Grid.RowDefinitions>
@@ -25,11 +42,13 @@
             </Grid.RowDefinitions>
 
             <!-- Región para mover la ventana -->
-            <Border Name="TitleBarBorder" Grid.Row="0" Background="Transparent" IsHitTestVisible="True">
-                <TextBlock Text="{Binding Title, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
-                         HorizontalAlignment="Center" VerticalAlignment="Center"
-                         Foreground="White" FontSize="13"/>
-            </Border>
+            <Panel Name="TitleBarHost" Grid.Row="0" Background="Transparent">
+                <Border Name="TitleBarBorder" Background="Transparent">
+                    <TextBlock Text="{Binding Title, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                             HorizontalAlignment="Center" VerticalAlignment="Center"
+                             Foreground="White" FontSize="13"/>
+                </Border>
+            </Panel>
 
             <!-- Contenido principal -->
             <Grid Grid.Row="1" Margin="20">
@@ -39,11 +58,11 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Text="{Binding Message}" TextWrapping="Wrap" VerticalAlignment="Center" 
-                         HorizontalAlignment="Center" Foreground="White"/>
+                         HorizontalAlignment="Center"/>
 
                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10">
-                    <Button Content="Aceptar" Click="OnOkClick" Width="100"/>
-                    <Button Content="Cancelar" Click="OnCancelClick" Width="100"/>
+                    <Button Content="Accept" Click="OnOkClick" Width="100" Classes="accent"/>
+                    <Button Content="Cancel" Click="OnCancelClick" Width="100"/>
                 </StackPanel>
             </Grid>
         </Grid>

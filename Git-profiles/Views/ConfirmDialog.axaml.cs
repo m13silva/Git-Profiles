@@ -2,12 +2,16 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace Git_profiles.Views
 {
-    public partial class ConfirmDialog : Window
+    public partial class ConfirmDialog : Window, INotifyPropertyChanged
     {
         private string _message = "";
+
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public ConfirmDialog()
         {
@@ -30,7 +34,19 @@ namespace Git_profiles.Views
         public string Message
         {
             get => _message;
-            set => _message = value;
+            set
+            {
+                if (_message != value)
+                {
+                    _message = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private void TitleBar_PointerPressed(object? sender, PointerPressedEventArgs e)
