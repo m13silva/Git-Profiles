@@ -129,7 +129,7 @@ namespace Git_profiles.ViewModels
 
         private async void AddProfile()
         {
-            var dialog = new ProfileDialog { DialogTitle = "Nuevo Perfil" };
+            var dialog = new ProfileDialog { DialogTitle = "New Profile" };
             if (_parentWindow != null)
             {
                 var result = await dialog.ShowDialog<bool>(_parentWindow);
@@ -149,10 +149,10 @@ namespace Git_profiles.ViewModels
             {
                 var dialog = new ConfirmDialog
                 {
-                    Title = "Confirmar eliminación",
+                    Title = "Confirm deletion",
                     Message = selected.Count == 1
-                        ? "¿Estás seguro de que deseas eliminar el perfil seleccionado?"
-                        : $"¿Estás seguro de que deseas eliminar los {selected.Count} perfiles seleccionados?"
+                        ? "Are you sure you want to delete the selected profile?"
+                        : $"Are you sure you want to delete the selected {selected.Count} profiles?"
                 };
 
                 if (_parentWindow != null)
@@ -200,11 +200,10 @@ namespace Git_profiles.ViewModels
             var selected = GetSelectedProfile();
             if (selected != null && _parentWindow != null)
             {
-                var dialog = new ProfileDialog { DialogTitle = "Editar Perfil" };
+                var dialog = new ProfileDialog { DialogTitle = "Edit Profile" };
                 dialog.SetProfile(selected);
 
                 var result = await dialog.ShowDialog<bool>(_parentWindow);
-                Console.WriteLine($"Dialog result: {result}");
                 if (result)
                 {
                     var editedProfile = dialog.GetProfile();
@@ -250,16 +249,6 @@ namespace Git_profiles.ViewModels
         private GitProfileModel? GetSelectedProfile()
         {
             return Profiles.Where(p => p.IsSelected).ToList().FirstOrDefault();
-            /*foreach (var profile in Profiles)
-            {
-                if (profile.IsSelected)
-                {
-                    Console.WriteLine($"Selected profile: {profile.Name}");
-                    return profile;
-                }
-            }
-            Console.WriteLine("No profile selected.");
-            return null;*/
         }
         private List<GitProfileModel>? GetSelectedProfiles()
         {

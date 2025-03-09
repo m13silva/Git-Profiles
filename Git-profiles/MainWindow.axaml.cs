@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 using Git_profiles.ViewModels;
 
 namespace Git_profiles
@@ -8,9 +9,22 @@ namespace Git_profiles
         public MainWindow()
         {
             InitializeComponent();
-            var viewModel = new MainWindowViewModel();
-            viewModel.SetParentWindow(this);
-            DataContext = viewModel;
+            DataContext = new MainWindowViewModel();
+            ((MainWindowViewModel)DataContext).SetParentWindow(this);
+
+            var titleBar = this.Find<Border>("TitleBarBorder");
+            if (titleBar != null)
+            {
+                titleBar.PointerPressed += TitleBar_PointerPressed;
+            }
+        }
+
+        private void TitleBar_PointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+            {
+                BeginMoveDrag(e);
+            }
         }
     }
 }

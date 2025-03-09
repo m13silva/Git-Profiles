@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Git_profiles.Models;
 
@@ -14,6 +15,20 @@ namespace Git_profiles.Views
             InitializeComponent();
             _viewModel = new ProfileDialogViewModel();
             DataContext = _viewModel;
+
+            var titleBar = this.Find<Border>("TitleBarBorder");
+            if (titleBar != null)
+            {
+                titleBar.PointerPressed += TitleBar_PointerPressed;
+            }
+        }
+
+        private void TitleBar_PointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+            {
+                BeginMoveDrag(e);
+            }
         }
 
         public void SetProfile(GitProfileModel profile)

@@ -10,13 +10,16 @@
         x:CompileBindings="True"
         x:DataType="vm:MainWindowViewModel"
         Title="Git Profiles" 
-        Background="Transparent" 
-        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="PreferSystemChrome"
+        ExtendClientAreaTitleBarHeightHint="-1"
+        SystemDecorations="Full"
+        TransparencyLevelHint="Mica"
         WindowStartupLocation="CenterScreen"
         MinWidth="500" MinHeight="400"
         Width="500" Height="450"
-        CanResize="false"
-        >
+        CanResize="false">
     
     <Design.DataContext>
         <vm:MainWindowViewModel/>
@@ -48,6 +51,14 @@
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+
+            <!-- Región para mover la ventana -->
+            <Border Name="TitleBarBorder" Grid.Row="0" Background="Transparent" IsHitTestVisible="True">
+                <TextBlock Text="{Binding Title, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                         HorizontalAlignment="Center" VerticalAlignment="Center"
+                         Foreground="White" FontSize="13"/>
+            </Border>
+
             <!-- Contenido principal -->
             <DockPanel Grid.Row="1" Margin="0 0 0 0">
                 <!-- Barra de herramientas superior -->
@@ -65,9 +76,9 @@
                     </StackPanel>
                     
                     <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button Content="+" Command="{CompiledBinding AddProfileCommand}" Classes="toolbar" ToolTip.Tip="Agregar nuevo perfil"/>
-                        <Button Content="-" Command="{CompiledBinding RemoveProfileCommand}" Classes="toolbar" ToolTip.Tip="Eliminar perfil seleccionado"/>
-                        <Button Content="&#x270E;" Command="{CompiledBinding EditProfileCommand}" Classes="toolbar" ToolTip.Tip="Editar perfil seleccionado"/>
+                        <Button Content="+" Command="{CompiledBinding AddProfileCommand}" Classes="toolbar" ToolTip.Tip="Add new profile"/>
+                        <Button Content="-" Command="{CompiledBinding RemoveProfileCommand}" Classes="toolbar" ToolTip.Tip="Delete selected profile"/>
+                        <Button Content="&#x270E;" Command="{CompiledBinding EditProfileCommand}" Classes="toolbar" ToolTip.Tip="Edit selected profile"/>
                     </StackPanel>
                 </Grid>
                 

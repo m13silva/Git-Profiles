@@ -1,18 +1,51 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:views="clr-namespace:Git_profiles.Views"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="200"
         x:Class="Git_profiles.Views.ConfirmDialog"
         x:DataType="views:ConfirmDialog"
-        Width="400" Height="150"
+        xmlns:views="clr-namespace:Git_profiles.Views"
+        Title="Confirmar"
+        Width="400" Height="200"
         CanResize="False"
-        WindowStartupLocation="CenterOwner">
-    
-    <DockPanel Margin="20">
-        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
-            <Button Content="Accept" Click="OnOkClick" />
-            <Button Content="Cancel" Click="OnCancelClick" />
-        </StackPanel>
+        WindowStartupLocation="CenterOwner"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="PreferSystemChrome"
+        ExtendClientAreaTitleBarHeightHint="-1"
+        SystemDecorations="Full"
+        TransparencyLevelHint="Mica">
 
-        <TextBlock Text="{CompiledBinding Message}" TextWrapping="Wrap" VerticalAlignment="Center"/>
-    </DockPanel>
+    <Border BoxShadow="0 0 0 0 #66000000" Background="#212121">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Región para mover la ventana -->
+            <Border Name="TitleBarBorder" Grid.Row="0" Background="Transparent" IsHitTestVisible="True">
+                <TextBlock Text="{Binding Title, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                         HorizontalAlignment="Center" VerticalAlignment="Center"
+                         Foreground="White" FontSize="13"/>
+            </Border>
+
+            <!-- Contenido principal -->
+            <Grid Grid.Row="1" Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="{Binding Message}" TextWrapping="Wrap" VerticalAlignment="Center" 
+                         HorizontalAlignment="Center" Foreground="White"/>
+
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10">
+                    <Button Content="Aceptar" Click="OnOkClick" Width="100"/>
+                    <Button Content="Cancelar" Click="OnCancelClick" Width="100"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Border>
 </Window>

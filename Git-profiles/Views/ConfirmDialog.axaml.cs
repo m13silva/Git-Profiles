@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 
 namespace Git_profiles.Views
@@ -12,6 +13,12 @@ namespace Git_profiles.Views
         {
             InitializeComponent();
             DataContext = this;
+
+            var titleBar = this.Find<Border>("TitleBarBorder");
+            if (titleBar != null)
+            {
+                titleBar.PointerPressed += TitleBar_PointerPressed;
+            }
         }
 
         public new string Title
@@ -24,6 +31,14 @@ namespace Git_profiles.Views
         {
             get => _message;
             set => _message = value;
+        }
+
+        private void TitleBar_PointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+            {
+                BeginMoveDrag(e);
+            }
         }
 
         private void OnOkClick(object? sender, RoutedEventArgs e)
