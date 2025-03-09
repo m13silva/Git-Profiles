@@ -12,12 +12,16 @@ namespace Git_profiles.Views
         private string _title;
         private GitProfileModel _profile;
         private ObservableCollection<GpgKey> _gpgKeys;
+        private bool _keysLoaded;
+        private string? _pendingGpgKeyId;
 
         public ProfileDialogViewModel()
         {
             _title = "";
             _profile = new GitProfileModel();
             _gpgKeys = new ObservableCollection<GpgKey>();
+            _keysLoaded = false;
+            _pendingGpgKeyId = null;
             _ = LoadGpgKeysAsync();
         }
 
@@ -28,6 +32,15 @@ namespace Git_profiles.Views
             foreach (var key in keys)
             {
                 _gpgKeys.Add(key);
+            }
+            _keysLoaded = true;
+
+            // Si tenemos una key pendiente de seleccionar, la seleccionamos ahora
+            if (_pendingGpgKeyId != null)
+            {
+                _profile.GpgKeyId = _pendingGpgKeyId;
+                _pendingGpgKeyId = null;
+                OnPropertyChanged(nameof(SelectedGpgKey));
             }
         }
 
@@ -52,7 +65,7 @@ namespace Git_profiles.Views
 
         public GpgKey? SelectedGpgKey
         {
-            get => _gpgKeys.FirstOrDefault(k => k.KeyId == _profile.GpgKeyId);
+            get => _keysLoaded ? _gpgKeys.FirstOrDefault(k => k.KeyId == _profile.GpgKeyId) : null;
             set
             {
                 if (value != null && _profile.GpgKeyId != value.KeyId)
@@ -99,9 +112,21 @@ namespace Git_profiles.Views
                 if (_profile != value)
                 {
                     _profile = value;
+                    if (!string.IsNullOrEmpty(value.GpgKeyId))
+                    {
+                        if (_keysLoaded)
+                        {
+                            // Si las keys ya están cargadas, actualizamos la selección inmediatamente
+                            OnPropertyChanged(nameof(SelectedGpgKey));
+                        }
+                        else
+                        {
+                            // Si las keys no están cargadas, guardamos la key para seleccionarla después
+                            _pendingGpgKeyId = value.GpgKeyId;
+                        }
+                    }
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(UseGpg));
-                    OnPropertyChanged(nameof(SelectedGpgKey));
                 }
             }
         }
