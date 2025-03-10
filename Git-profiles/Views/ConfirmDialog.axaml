@@ -34,7 +34,7 @@
         </Style>
     </Window.Styles>
 
-    <Border BoxShadow="0 0 0 0 #66000000" Background="#212121">
+    <Border BoxShadow="0 0 0 0 #66000000" Background="#14181B">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
@@ -60,7 +60,7 @@
                 <TextBlock Text="{Binding Message}" TextWrapping="Wrap" VerticalAlignment="Center" 
                          HorizontalAlignment="Center"/>
 
-                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10">
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
                     <Button Content="Accept" Click="OnOkClick" Width="100" Classes="accent"/>
                     <Button Content="Cancel" Click="OnCancelClick" Width="100"/>
                 </StackPanel>

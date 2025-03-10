@@ -32,11 +32,11 @@
             <Setter Property="BorderBrush" Value="#50FFFFFF"/>
         </Style>
         <Style Selector="TextBox">
-            <Setter Property="Background" Value="#3DFFFFFF"/>
+            <Setter Property="Background" Value="#14181B"/>
             <Setter Property="Foreground" Value="White"/>
         </Style>
         <Style Selector="ComboBox">
-            <Setter Property="Background" Value="#3DFFFFFF"/>
+            <Setter Property="Background" Value="#14181B"/>
             <Setter Property="Foreground" Value="White"/>
         </Style>
         <Style Selector="TextBlock">
@@ -47,7 +47,7 @@
         </Style>
     </Window.Styles>
 
-    <Border BoxShadow="0 0 0 0 #66000000" Background="#212121">
+    <Border BoxShadow="0 0 0 0 #66000000" Background="#14181B">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>

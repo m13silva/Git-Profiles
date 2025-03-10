@@ -45,7 +45,7 @@
         </Style>
     </Window.Styles>
     
-    <Border BoxShadow="0 0 0 0 #66000000" Background="#212121">
+    <Border BoxShadow="0 0 0 0 #66000000" Background="#14181B">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
@@ -60,36 +60,51 @@
             </Border>
 
             <!-- Contenido principal -->
-            <DockPanel Grid.Row="1" Margin="0 0 0 0">
-                <!-- Barra de herramientas superior -->
-                <Grid DockPanel.Dock="Top" Margin="10 0 0 10" Height="20">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    
-                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock Text="Current profile:" VerticalAlignment="Center" Margin="10 0 10 0" Foreground="White"/>
-                        <TextBlock Text="{CompiledBinding CurrentProfile.Name}" VerticalAlignment="Center" 
-                                  FontWeight="SemiBold" Foreground="#8EE3FF"/>
-                    </StackPanel>
-                    
-                    <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button Content="+" Command="{CompiledBinding AddProfileCommand}" Classes="toolbar" ToolTip.Tip="Add new profile"/>
-                        <Button Content="-" Command="{CompiledBinding RemoveProfileCommand}" Classes="toolbar" ToolTip.Tip="Delete selected profile"/>
-                        <Button Content="&#x270E;" Command="{CompiledBinding EditProfileCommand}" Classes="toolbar" ToolTip.Tip="Edit selected profile"/>
-                    </StackPanel>
-                </Grid>
-                
-                <!-- Separador -->
-                <Separator DockPanel.Dock="Top" Background="#333333" Height="1" Margin="5,0"/>
+            <DockPanel Grid.Row="1" Margin="10">
+                <!-- Panel superior -->
+                <Border DockPanel.Dock="Top" 
+                        Background="#1B1F24"
+                        BorderBrush="#373C43"
+                        BorderThickness="1" 
+                        CornerRadius="4"
+                        Padding="10,5"
+                        Margin="5 0 5 0"
+                        Height="50">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <!-- Información del perfil actual -->
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Current profile" 
+                                     Foreground="White"
+                                     FontSize="12"/>
+                            <TextBlock Text="{CompiledBinding CurrentProfile.Name}"
+                                     FontWeight="SemiBold" 
+                                     Foreground="#8EE3FF"
+                                     FontSize="14"
+                                     Margin="0 5 0 0"/>
+                        </StackPanel>
+                        
+                        <!-- Botones -->
+                        <StackPanel Grid.Column="2" 
+                                  Orientation="Horizontal" 
+                                  HorizontalAlignment="Right">
+                            <Button Content="+" Command="{CompiledBinding AddProfileCommand}" Classes="toolbar" ToolTip.Tip="Add new profile"/>
+                            <Button Content="-" Command="{CompiledBinding RemoveProfileCommand}" Classes="toolbar" ToolTip.Tip="Delete selected profile"/>
+                            <Button Content="&#x270E;" Command="{CompiledBinding EditProfileCommand}" Classes="toolbar" ToolTip.Tip="Edit selected profile"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
                 
                 <!-- Lista de perfiles -->
                 <ScrollViewer>
                     <ItemsControl x:DataType="vm:MainWindowViewModel" 
                                 ItemsSource="{Binding Profiles}"
-                                Margin="10">
+                                Margin="0 10 0 0">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <views:ProfileCard Margin="0 0 0 5"/>

@@ -9,8 +9,8 @@
              x:CompileBindings="True"
              x:DataType="models:GitProfileModel">
     
-    <Border BorderBrush="#707070" BorderThickness="1" Margin="5" Padding="5" CornerRadius="8"
-            BoxShadow="0 2 5 0 #40000000" Background="#2A2A2A"
+    <Border BorderBrush="#353B40" BorderThickness="1" Margin="5" Padding="5" CornerRadius="8"
+            BoxShadow="0 2 5 0 #40000000" Background="#262E34"
             Classes.profile-card="true"
             Classes.active="{CompiledBinding IsActive}"
             Classes.selected="{CompiledBinding IsSelected}"
@@ -56,6 +56,10 @@
             <Setter Property="BorderBrush" Value="#4CAF50"/>
             <Setter Property="BorderThickness" Value="2"/>
             <Setter Property="Background" Value="#2D362E"/>
+        </Style>
+        <Style Selector="CheckBox:unchecked /template/ Border#NormalRectangle">
+	        <Setter Property="BorderBrush" Value="#353B40"/>
+            <Setter Property="Background" Value="#1B1F24"/>
         </Style>
     </UserControl.Styles>
 </UserControl>
