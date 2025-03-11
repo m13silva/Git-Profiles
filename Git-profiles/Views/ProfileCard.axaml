@@ -15,7 +15,7 @@
     </UserControl.Resources>
 
     <Border BorderBrush="{CompiledBinding IsActive, Converter={StaticResource BooleanToColorConverter}, 
-        ConverterParameter=#353B40|#4CAF50}" BorderThickness="1" Margin="5" Padding="5" CornerRadius="8"
+        ConverterParameter=#353B40|#4CAF50}" BorderThickness="1.5" Margin="5" Padding="5" CornerRadius="8"
             BoxShadow="0 2 5 0 #40000000" Background="#262E34"
             Classes.profile-card="true"
             Classes.active="{CompiledBinding IsActive}"
