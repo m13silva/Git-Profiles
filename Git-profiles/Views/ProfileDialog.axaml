@@ -71,10 +71,10 @@
 
                 <StackPanel Spacing="16">
                     <TextBlock Text="UserName:" />
-                    <TextBox Text="{Binding Profile.Name}" Classes="revealPasswordButton" />
+                    <TextBox Text="{Binding Profile.Name}" />
                     
                     <TextBlock Text="Email:"/>
-                    <TextBox Text="{Binding Profile.Email}" Classes="revealPasswordButton" />
+                    <TextBox Text="{Binding Profile.Email}" />
 
                     <CheckBox Content="Use GPG" IsChecked="{Binding UseGpg}" Margin="0 4 0 0"/>
                     
