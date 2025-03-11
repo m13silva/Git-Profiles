@@ -2,6 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:lucideAvalonia="clr-namespace:LucideAvalonia;assembly=LucideAvalonia"
         xmlns:vm="clr-namespace:Git_profiles.ViewModels"
         xmlns:models="clr-namespace:Git_profiles.Models"
         xmlns:views="clr-namespace:Git_profiles.Views"
@@ -66,7 +67,7 @@
                         Background="#1B1F24"
                         BorderBrush="#373C43"
                         BorderThickness="1" 
-                        CornerRadius="4"
+                        CornerRadius="8"
                         Padding="10,5"
                         Margin="5 0 5 0"
                         Height="50">
@@ -93,9 +94,33 @@
                         <StackPanel Grid.Column="2" 
                                   Orientation="Horizontal" 
                                   HorizontalAlignment="Right">
-                            <Button Content="+" Command="{CompiledBinding AddProfileCommand}" Classes="toolbar" ToolTip.Tip="Add new profile"/>
-                            <Button Content="-" Command="{CompiledBinding RemoveProfileCommand}" Classes="toolbar" ToolTip.Tip="Delete selected profile"/>
-                            <Button Content="&#x270E;" Command="{CompiledBinding EditProfileCommand}" Classes="toolbar" ToolTip.Tip="Edit selected profile"/>
+                            <Button Command="{CompiledBinding AddProfileCommand}" 
+                                    Classes="toolbar" 
+                                    ToolTip.Tip="Add new profile"
+                                    Background="#4B25BC"
+                                    BorderBrush="#2F0F90"
+                                    BorderThickness="2"
+                                    CornerRadius="10">
+                                    <lucideAvalonia:Lucide Icon="Plus" StrokeBrush="White" Width="14" Height="14"/>
+                            </Button>
+                            <Button Command="{CompiledBinding RemoveProfileCommand}" 
+                                    Classes="toolbar" 
+                                    ToolTip.Tip="Delete selected profile"
+                                    Background="#BC254B"
+                                    BorderBrush="#A31C3D"
+                                    BorderThickness="2"
+                                    CornerRadius="10">
+                                    <lucideAvalonia:Lucide Icon="Trash2" StrokeBrush="White" Width="14" Height="14"/>
+                            </Button>
+                            <Button Command="{CompiledBinding EditProfileCommand}" 
+                                    Classes="toolbar" 
+                                    ToolTip.Tip="Edit selected profile"
+                                    Background="#48ACAF"
+                                    BorderBrush="#29898C"
+                                    BorderThickness="2"
+                                    CornerRadius="10">
+                                    <lucideAvalonia:Lucide Icon="Pencil" StrokeBrush="White" Width="14" Height="14"/>
+                            </Button>
                         </StackPanel>
                     </Grid>
                 </Border>
