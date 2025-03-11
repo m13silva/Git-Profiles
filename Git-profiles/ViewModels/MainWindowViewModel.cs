@@ -136,7 +136,7 @@ namespace Git_profiles.ViewModels
                 if (result)
                 {
                     var newProfile = dialog.GetProfile();
-                    await Task.Run(() => _databaseService.SaveProfile(newProfile));
+                    newProfile = await Task.Run(() => _databaseService.SaveProfile(newProfile));
                     Profiles.Add(newProfile);
                 }
             }

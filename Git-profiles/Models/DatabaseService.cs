@@ -73,7 +73,7 @@ namespace Git_profiles.Models
             return profiles;
         }
 
-        public void SaveProfile(GitProfileModel profile)
+        public GitProfileModel SaveProfile(GitProfileModel profile)
         {
             var connectionString = new SqliteConnectionStringBuilder
             {
@@ -84,31 +84,46 @@ namespace Git_profiles.Models
             using var connection = new SqliteConnection(connectionString);
             connection.Open();
 
-            var command = connection.CreateCommand();
-            if (profile.Id == 0)
+            using var transaction = connection.BeginTransaction();
+            try
             {
-                command.CommandText = @"
-                    INSERT INTO GitProfiles (Name, Email, GpgKeyId, Color, IsActive, UseGpg)
-                    VALUES (@name, @email, @gpgKeyId, @color, @isActive, @useGpg)";
+                var command = connection.CreateCommand();
+                if (profile.Id == 0)
+                {
+                    command.CommandText = @"
+                INSERT INTO GitProfiles (Name, Email, GpgKeyId, Color, IsActive, UseGpg)
+                VALUES (@name, @email, @gpgKeyId, @color, @isActive, @useGpg);
+                SELECT last_insert_rowid();";
+                }
+                else
+                {
+                    command.CommandText = @"
+                UPDATE GitProfiles 
+                SET Name = @name, Email = @email, GpgKeyId = @gpgKeyId, 
+                    Color = @color, IsActive = @isActive, UseGpg = @useGpg
+                WHERE Id = @id;
+                SELECT @id;";
+                    command.Parameters.AddWithValue("@id", profile.Id);
+                }
+
+                command.Parameters.AddWithValue("@name", profile.Name);
+                command.Parameters.AddWithValue("@email", profile.Email);
+                command.Parameters.AddWithValue("@gpgKeyId", (object)profile.GpgKeyId ?? DBNull.Value);
+                command.Parameters.AddWithValue("@color", (object)profile.Color ?? DBNull.Value);
+                command.Parameters.AddWithValue("@isActive", profile.IsActive ? 1 : 0);
+                command.Parameters.AddWithValue("@useGpg", profile.UseGpg ? 1 : 0);
+
+                // Ejecutar el comando y obtener el ID
+                profile.Id = Convert.ToInt32(command.ExecuteScalar());
+
+                transaction.Commit();
+                return profile;
             }
-            else
+            catch
             {
-                command.CommandText = @"
-                    UPDATE GitProfiles 
-                    SET Name = @name, Email = @email, GpgKeyId = @gpgKeyId, 
-                        Color = @color, IsActive = @isActive, UseGpg = @useGpg
-                    WHERE Id = @id";
-                command.Parameters.AddWithValue("@id", profile.Id);
+                transaction.Rollback();
+                throw;
             }
-
-            command.Parameters.AddWithValue("@name", profile.Name);
-            command.Parameters.AddWithValue("@email", profile.Email);
-            command.Parameters.AddWithValue("@gpgKeyId", (object)profile.GpgKeyId ?? DBNull.Value);
-            command.Parameters.AddWithValue("@color", (object)profile.Color ?? DBNull.Value);
-            command.Parameters.AddWithValue("@isActive", profile.IsActive ? 1 : 0);
-            command.Parameters.AddWithValue("@useGpg", profile.UseGpg ? 1 : 0);
-
-            command.ExecuteNonQuery();
         }
 
         public void DeleteProfile(int profileId)
