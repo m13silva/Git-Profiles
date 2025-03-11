@@ -2,14 +2,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:converters="clr-namespace:Git_profiles.Converters"
              xmlns:vm="clr-namespace:Git_profiles.ViewModels"
              xmlns:models="clr-namespace:Git_profiles.Models"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="80"
              x:Class="Git_profiles.Views.ProfileCard"
              x:CompileBindings="True"
              x:DataType="models:GitProfileModel">
-    
-    <Border BorderBrush="#353B40" BorderThickness="1" Margin="5" Padding="5" CornerRadius="8"
+             
+    <UserControl.Resources>
+        <converters:BooleanToColorConverter x:Key="BooleanToColorConverter"/>
+    </UserControl.Resources>
+
+    <Border BorderBrush="{CompiledBinding IsActive, Converter={StaticResource BooleanToColorConverter}, 
+        ConverterParameter=#353B40|#4CAF50}" BorderThickness="1" Margin="5" Padding="5" CornerRadius="8"
             BoxShadow="0 2 5 0 #40000000" Background="#262E34"
             Classes.profile-card="true"
             Classes.active="{CompiledBinding IsActive}"
