@@ -12,7 +12,7 @@ namespace Git_profiles.Views
             InitializeComponent();
         }
 
-        private void OnDoubleTapped(object? sender, TappedEventArgs e)
+        private void OnTapped(object? sender, TappedEventArgs e)
         {
             if (DataContext is GitProfileModel profile)
             {

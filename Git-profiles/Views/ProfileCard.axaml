@@ -14,7 +14,7 @@
             Classes.profile-card="true"
             Classes.active="{CompiledBinding IsActive}"
             Classes.selected="{CompiledBinding IsSelected}"
-            DoubleTapped="OnDoubleTapped">
+            Tapped="OnTapped">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
