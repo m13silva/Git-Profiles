@@ -14,6 +14,10 @@ namespace Git_profiles.Views
 
         private void OnTapped(object? sender, TappedEventArgs e)
         {
+            // Verificamos si el evento fue disparado por un CheckBox
+            var PressedSource = e.Source as Control;
+            if (PressedSource?.TemplatedParent is CheckBox) return;
+
             if (DataContext is GitProfileModel profile)
             {
                 // Buscamos el MainWindowViewModel
